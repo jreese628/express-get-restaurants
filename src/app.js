@@ -14,32 +14,24 @@ app.get("/restaurants", async (req, res) => {
 });
 
 app.get("/restaurants/:id", async (req, res) => {
-  const id = req.params.id;
-  const restaurant = await Restaurant.findByPk(id);
+  const restaurant = await Restaurant.findByPk(req.params.id);
   res.json(restaurant);
 });
 
 app.post("/restaurants", async (req, res) => {
-  const newRestaurant = req.body;
-  const createdRestaurant = await Restaurant.create(newRestaurant);
-  res.json(createdRestaurant)
+  const restaurant = await Restaurant.create(req.body);
+  res.json(restaurant)
 });
 
 app.put("/restaurants/:id", async (req, res) => {
-  const id = req.params.id
-  const updatedRestaurantData = req.body;
-
-  const restaurant = await Restaurant.findByPk(id);
-  const updatedRestaurant = await restaurant.update(updatedRestaurantData);
-  res.json(updatedRestaurant);
+  const updatedRest = await Restaurant.update(req.body, {where: {id: req.params.id}})
+  res.json(updatedRest);
 });
 
 app.delete("/restaurants/:id", async (req, res) => {
-  const id = req.params.id;
-
-  const restaurant = await Restaurant.findByPk(id);
-  await restaurant.destroy();
-  res.status(200).send()
+  const deletedRest = await Restaurant.destroy({where: {id: req.params.id}});
+  res.json(deletedRest)
 });
+
 
 module.exports = app;
